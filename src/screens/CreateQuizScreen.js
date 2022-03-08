@@ -52,6 +52,16 @@ const CreateQuizScreen = ({ navigation }) => {
                 value={description}
             />
             <FormButton labelText="Save Quiz" handleOnPress={handleQuizSave} />
+            {/*temp button*/}
+            <FormButton
+                labelText="nav to AddQuestionScreen"
+                handleOnPress={() =>
+                    navigation.navigate('AddQuestionScreen', {
+                        currentQuizId: '104921',
+                        currentQuisTitle: 'shmek',
+                    })
+                }
+            />
         </SafeAreaView>
     );
 };
