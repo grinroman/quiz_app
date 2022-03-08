@@ -5,9 +5,9 @@ import CreateQuizScreen from './CreateQuizScreen';
 import AddQuestionScreen from './AddQuestionScreen';
 
 export {
-  HomeScreen,
-  SignUpScreen,
-  SignInScreen,
-  CreateQuizScreen,
-  AddQuestionScreen,
+    HomeScreen,
+    SignUpScreen,
+    SignInScreen,
+    CreateQuizScreen,
+    AddQuestionScreen,
 };
