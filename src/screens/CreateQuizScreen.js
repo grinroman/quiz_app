@@ -1,4 +1,10 @@
-import { View, Text, SafeAreaView, ToastAndroid } from 'react-native';
+import {
+    View,
+    Text,
+    SafeAreaView,
+    ToastAndroid,
+    StyleSheet,
+} from 'react-native';
 import React, { useState } from 'react';
 import { COLORS } from '../constants/theme';
 import FormInput from '../components/shared/FormInput';
@@ -25,20 +31,12 @@ const CreateQuizScreen = ({ navigation }) => {
         setDescription('');
         ToastAndroid.show('Quizz saved successfully!', ToastAndroid.SHORT);
     };
+
+    const selectImage = () => {};
+
     return (
-        <SafeAreaView
-            style={{ flex: 1, backgroundColor: COLORS.white, padding: 20 }}
-        >
-            <Text
-                style={{
-                    fontSize: 25,
-                    textAlign: 'center',
-                    marginVertical: 20,
-                    color: COLORS.black,
-                }}
-            >
-                Create a new quiz
-            </Text>
+        <SafeAreaView style={styles.safeArea}>
+            <Text style={styles.createQuizText}>Create a new quiz</Text>
             <FormInput
                 labelText="Title"
                 placeholder="enter title"
@@ -52,13 +50,14 @@ const CreateQuizScreen = ({ navigation }) => {
                 value={description}
             />
             <FormButton labelText="Save Quiz" handleOnPress={handleQuizSave} />
+
             {/*temp button*/}
             <FormButton
                 labelText="nav to AddQuestionScreen"
                 handleOnPress={() =>
                     navigation.navigate('AddQuestionScreen', {
-                        currentQuizId: '104921',
-                        currentQuisTitle: 'shmek',
+                        currentQuizId: '100982',
+                        currentQuizTitle: 'Shmek quiz',
                     })
                 }
             />
@@ -67,3 +66,25 @@ const CreateQuizScreen = ({ navigation }) => {
 };
 
 export default CreateQuizScreen;
+
+const styles = StyleSheet.create({
+    safeArea: { flex: 1, backgroundColor: COLORS.white, padding: 20 },
+    createQuizText: {
+        fontSize: 25,
+        textAlign: 'center',
+        marginVertical: 20,
+        color: COLORS.black,
+    },
+    touchableOpacityImg: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 28,
+        backgroundColor: COLORS.primary + '20',
+    },
+    image: {
+        width: '100%',
+        height: 200,
+        borderRadius: 5,
+    },
+    
+});
