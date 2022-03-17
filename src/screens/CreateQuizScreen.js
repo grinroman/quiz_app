@@ -4,6 +4,7 @@ import {
     SafeAreaView,
     ToastAndroid,
     StyleSheet,
+    LogBox,
 } from 'react-native';
 import React, { useState } from 'react';
 import { COLORS } from '../constants/theme';
@@ -12,6 +13,7 @@ import FormButton from '../components/shared/FormButton';
 import { createQuiz } from '../utils/database';
 
 const CreateQuizScreen = ({ navigation }) => {
+    LogBox.ignoreLogs(['Setting a timer']);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
@@ -24,15 +26,13 @@ const CreateQuizScreen = ({ navigation }) => {
         //Navigate to Add Question string
         navigation.navigate('AddQuestionScreen', {
             currentQuizId: currentQuizId,
-            currentQuisTitle: title,
+            currentQuizTitle: title,
         });
         //reset the navigation
         setTitle('');
         setDescription('');
         ToastAndroid.show('Quizz saved successfully!', ToastAndroid.SHORT);
     };
-
-    const selectImage = () => {};
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -52,7 +52,7 @@ const CreateQuizScreen = ({ navigation }) => {
             <FormButton labelText="Save Quiz" handleOnPress={handleQuizSave} />
 
             {/*temp button*/}
-            <FormButton
+            {/* <FormButton
                 labelText="nav to AddQuestionScreen"
                 handleOnPress={() =>
                     navigation.navigate('AddQuestionScreen', {
@@ -60,7 +60,7 @@ const CreateQuizScreen = ({ navigation }) => {
                         currentQuizTitle: 'Shmek quiz',
                     })
                 }
-            />
+            /> */}
         </SafeAreaView>
     );
 };
@@ -86,5 +86,4 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 5,
     },
-    
 });

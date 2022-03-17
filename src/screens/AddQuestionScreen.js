@@ -6,6 +6,7 @@ import {
     ScrollView,
     ToastAndroid,
     TouchableOpacity,
+    ActivityIndicator,
     Image,
 } from 'react-native';
 import React, { useState } from 'react';
@@ -14,21 +15,69 @@ import FormInput from '../components/shared/FormInput';
 import FormButton from '../components/shared/FormButton';
 import { createQuestion } from '../utils/database';
 import * as ImagePicker from 'expo-image-picker';
+import * as Firebase from 'firebase';
 
 const AddQuestionScreen = ({ navigation, route }) => {
     const [currentQuizId, setCurrentQuizId] = useState(
         route.params.currentQuizId
     );
+
     const [currentQuizTitle, setCurrentQuizTitle] = useState(
         route.params.currentQuizTitle
     );
-    const [question, setQuestion] = useState('');
 
+    const [question, setQuestion] = useState('');
     const [correctAnswer, setCorrectAnswer] = useState('');
     const [optionTwo, setOptionTwo] = useState('');
     const [optionThree, setOptionThree] = useState('');
     const [optionFour, setOptionFour] = useState('');
     const [imageUri, setImageUri] = useState('');
+    const [uploading, setUploading] = useState(true);
+
+    let currentQuestionId = Math.floor(
+        100000 + Math.random() * 9000
+    ).toString();
+
+    const imgUpload = async (imageUri) => {
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                resolve(xhr.response);
+            };
+            xhr.onerror = function (e) {
+                console.log(e);
+                reject(new TypeError('Network request failed'));
+            };
+            xhr.responseType = 'blob';
+            xhr.open('GET', imageUri, true);
+            xhr.send(null);
+        });
+
+        const ref = Firebase.storage()
+            .ref()
+            .child(`questions/${currentQuizId}_${currentQuestionId}`);
+        const snapshot = await ref.put(blob);
+        snapshot.on(
+            Firebase.storage.TaskEvent.STATE_CHANGED,
+            () => {
+                setImageUri('');
+            },
+            (error) => {
+                stUploading(false);
+                console.log(error);
+                blob.close();
+                return;
+            },
+            () => {
+                snapshot.snapshot.ref.getDownloadURL().then((url) => {
+                    setImageUri('');
+                    console.log(url);
+                    blob.close();
+                    return url;
+                });
+            }
+        );
+    };
 
     const handleQuestionSave = async () => {
         if (
@@ -46,10 +95,13 @@ const AddQuestionScreen = ({ navigation, route }) => {
         ).toString();
 
         // Upload Image
+        imgUpload(imageUri);
+
         await createQuestion(currentQuizId, currentQuestionId, {
             question,
             correct_answer: correctAnswer,
             incorrect_answers: [optionTwo, optionThree, optionFour],
+            imageUri,
         });
         ToastAndroid.show('Question created successfully!', ToastAndroid.SHORT);
         setQuestion('');
@@ -57,6 +109,7 @@ const AddQuestionScreen = ({ navigation, route }) => {
         setOptionTwo('');
         setOptionThree('');
         setOptionFour('');
+        setImageUri('');
     };
 
     const selectImage = async () => {
@@ -67,7 +120,6 @@ const AddQuestionScreen = ({ navigation, route }) => {
             aspect: [4, 3],
             quality: 1,
         });
-        console.log(result);
         if (!result.cancelled) {
             setImageUri(result.uri);
         }
@@ -93,11 +145,7 @@ const AddQuestionScreen = ({ navigation, route }) => {
                             style={styles.touchableOpacityImg}
                             onPress={selectImage}
                         >
-                            <Text
-                                style={{ opacity: 0.5, color: COLORS.primary }}
-                            >
-                                + add image
-                            </Text>
+                            <Text style={styles.textImg}>+ add image</Text>
                         </TouchableOpacity>
                     ) : (
                         <Image
@@ -180,4 +228,5 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 5,
     },
+    textImg: { opacity: 0.5, color: COLORS.primary },
 });

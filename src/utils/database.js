@@ -16,3 +16,8 @@ export const createQuestion = (currentQuizId, currentQuestionId, question) => {
         .doc(currentQuestionId)
         .set(question);
 };
+
+//get all quizes list
+export const getQuizzes = () => {
+    return db.collection('Quizzes').get();
+};
