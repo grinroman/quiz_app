@@ -3,6 +3,7 @@ import SignUpScreen from './SignUpScreen';
 import SignInScreen from './SignInScreen';
 import CreateQuizScreen from './CreateQuizScreen';
 import AddQuestionScreen from './AddQuestionScreen';
+import PlayQuizzScreen from './PlayQuizzScreen';
 
 export {
     HomeScreen,
@@ -10,4 +11,5 @@ export {
     SignInScreen,
     CreateQuizScreen,
     AddQuestionScreen,
+    PlayQuizzScreen,
 };
